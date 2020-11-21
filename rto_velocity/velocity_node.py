@@ -7,10 +7,13 @@ from sensor_msgs.msg import LaserScan
 from numpy import mean
 
 vel_msg = Twist()
+stop_distance = 0.0
+attention_distance = 0.0
+rospy.get_param('/velocity_node/stop_distance', stop_distance)
+rospy.get_param('/velocity_node/attention_distance', attention_distance)
 
 
 class VelocityNode:
-  
 
     def __init__(self):
 
@@ -47,23 +50,23 @@ class VelocityNode:
         if(vel_msg.linear.x < 0):
             vel_msg_pub.linear.x = vel_msg.linear.x
         #If closer to an object than distance 3, but further away than 0.33, proportionally reduce speed
-        elif(self.average(range_forward) < 3 and self.average(range_forward) > 0):
+        elif(self.average(range_forward) < attention_distance and self.average(range_forward) > 0):
 
-            if(self.average(range_forward)/3-1/3 > 0):
+            if(self.average(range_forward)/3-stop_distance > 0):
                 #If the input is slower than the required speed, listen to the input
                 vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_forward)/3)
             else: 
                 vel_msg_pub.linear.x = 0.0
 
-        elif(self.average(range_diagonal_left) < 3 and self.average(range_diagonal_left) > 0):
-            if(self.average(range_diagonal_left)/3-1/3 > 0):
+        elif(self.average(range_diagonal_left) < attention_distance and self.average(range_diagonal_left) > 0):
+            if(self.average(range_diagonal_left)/3-stop_distance > 0):
                 vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_diagonal_left)/3)
             else: 
                 vel_msg.linear.x = 0.0
            
-        elif(self.average(range_diagonal_right) < 3 and self.average(range_diagonal_right) > 0):
+        elif(self.average(range_diagonal_right) < attention_distance and self.average(range_diagonal_right) > 0):
 
-            if(self.average(range_diagonal_right)/3-1/3 > 0):
+            if(self.average(range_diagonal_right)/3-stop_distance > 0):
                 vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_diagonal_right)/3)
             else: 
                 vel_msg_pub.linear.x = 0.0
