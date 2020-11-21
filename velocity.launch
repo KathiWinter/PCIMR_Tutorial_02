@@ -1,0 +1,12 @@
+<launch>
+
+    <node pkg="rto_velocity" type="velocity_node.py" name="velocity_node" ns="velocity">
+
+        <rosparam>
+            stop_distance: 0.33 
+            attention_distance: 3       
+        </rosparam>   
+
+    </node>
+
+</launch>
