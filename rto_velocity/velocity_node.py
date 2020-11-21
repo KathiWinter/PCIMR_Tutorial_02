@@ -68,8 +68,9 @@ class VelocityNode:
                 vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_diagonal_right)/3)
             else: 
                 vel_msg_pub.linear.x = 0.0
-               
-
+        else: 
+            vel_msg_pub.linear.x = vel_msg.linear.x  
+     
         self.pub.publish(vel_msg_pub)
 
     def average(self,tuple):
