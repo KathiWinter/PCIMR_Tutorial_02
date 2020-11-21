@@ -58,7 +58,6 @@ class VelocityNode:
         elif(self.average(range_diagonal_left) < 3 and self.average(range_diagonal_left) > 0):
             if(self.average(range_diagonal_left)/3-1/3 > 0):
                 vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_diagonal_left)/3)
-                print(vel_msg_pub.linear.x)
             else: 
                 vel_msg.linear.x = 0.0
            
