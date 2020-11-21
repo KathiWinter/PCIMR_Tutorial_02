@@ -5,7 +5,7 @@ Run the task with the following commands:
 `rosrun teleop_twist_keyboard teleop_twist_keyboard.py` 
 `rosrun rto_velocity velocity_node.py`  
 
-Functioning of velocity_node  
+Functioning of velocity_node:  
 - Subscribers to /scan and /cmd_vel  
 - Publisher to /pioneer/cmd_vel  
 
