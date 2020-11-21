@@ -19,8 +19,8 @@ class VelocityNode:
         self.pub = rospy.Publisher('/pioneer/cmd_vel', Twist, queue_size=10)
     
         
-        
     def cmd_vel_callback(self, data):
+
         global vel_msg
  
         vel_msg.linear.x = data.linear.x
@@ -29,58 +29,54 @@ class VelocityNode:
         vel_msg.angular.x = data.angular.x
         vel_msg.angular.y = data.angular.y
         vel_msg.angular.z = data.angular.z
-       
+
 
     def scan_callback(self, data):
-        global vel_msg 
 
-        range_left = data.ranges[0:int(len(data.ranges)/5)]
-        range_right = data.ranges[int(len(data.ranges)/5*3):int(len(data.ranges))]
+        global vel_msg 
+        vel_msg_pub = Twist()
+
+        #Partition the sensor range into five smaller ranges
+        #range_left = data.ranges[0:int(len(data.ranges)/5)]
+        #range_right = data.ranges[int(len(data.ranges)/5*3):int(len(data.ranges))]
         range_diagonal_left = data.ranges[int(len(data.ranges)/5):int(len(data.ranges)/5*2)]
         range_diagonal_right = data.ranges[int(len(data.ranges)/5*3):int(len(data.ranges)/5*4)]
         range_forward = data.ranges[int(len(data.ranges)/5*2):int(len(data.ranges)/5*3)]
-    
-        
-        if(self.average(range_forward) < 3 and self.average(range_forward) > 0):
-                if(self.average(range_forward)/3-1/3 > 0):
-                    vel_msg.linear.x  = self.average(range_forward)/3
-                else: 
-                    vel_msg.linear.x = 0.0
-                vel_msg.linear.y = vel_msg.linear.x
-                vel_msg.linear.z = vel_msg.linear.z
-                vel_msg.angular.x = 0.0
-                vel_msg.angular.y = 0.0
-                vel_msg.angular.z = 0.0
+  
+        #Let the robot go backwards, when we want so
+        if(vel_msg.linear.x < 0):
+            vel_msg_pub.linear.x = vel_msg.linear.x
+        #If closer to an object than distance 3, but further away than 0.33, proportionally reduce speed
+        elif(self.average(range_forward) < 3 and self.average(range_forward) > 0):
+
+            if(self.average(range_forward)/3-1/3 > 0):
+                #If the input is slower than the required speed, listen to the input
+                vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_forward)/3)
+            else: 
+                vel_msg_pub.linear.x = 0.0
+
         elif(self.average(range_diagonal_left) < 3 and self.average(range_diagonal_left) > 0):
-                if(self.average(range_diagonal_left)/3-1/3 > 0):
-                    vel_msg.linear.x  = self.average(range_diagonal_left)/3
-                else: 
-                    vel_msg.linear.x = 0.0
-                vel_msg.linear.y = vel_msg.linear.x
-                vel_msg.linear.z = vel_msg.linear.z
-                vel_msg.angular.x = 0.0
-                vel_msg.angular.y = 0.0
-                vel_msg.angular.z = 0.0
+            if(self.average(range_diagonal_left)/3-1/3 > 0):
+                vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_diagonal_left)/3)
+                print(vel_msg_pub.linear.x)
+            else: 
+                vel_msg.linear.x = 0.0
            
         elif(self.average(range_diagonal_right) < 3 and self.average(range_diagonal_right) > 0):
-                if(self.average(range_diagonal_right)/3-1/3 > 0):
-                    vel_msg.linear.x  = self.average(range_diagonal_right)/3
-                else: 
-                    vel_msg.linear.x = 0.0
-                vel_msg.linear.y = vel_msg.linear.x
-                vel_msg.linear.z = vel_msg.linear.z
-                vel_msg.angular.x = 0.0
-                vel_msg.angular.y = 0.0
-                vel_msg.angular.z = 0.0
-           
-        print(vel_msg)
-        self.pub.publish(vel_msg)
+
+            if(self.average(range_diagonal_right)/3-1/3 > 0):
+                vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_diagonal_right)/3)
+            else: 
+                vel_msg_pub.linear.x = 0.0
+               
+
+        self.pub.publish(vel_msg_pub)
 
     def average(self,tuple):
          return(sum(tuple) / len(tuple))
 
     def run(self, rate: float = 1):
-   
+
         while not rospy.is_shutdown():
             if rate:
                 rospy.sleep(1/rate)
