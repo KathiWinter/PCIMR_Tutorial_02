@@ -13,7 +13,7 @@ class VelocityNode:
 
         self.sub_cmd_vel = rospy.Subscriber("/cmd_vel", Twist, self.cmd_vel_callback)
         self.sub_scan = rospy.Subscriber("/scan", LaserScan, self.scan_callback)
-        self.pub = rospy.Publisher('/pioneer/cmd_vel', Twist, queue_size=10)
+        self.pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
     
         
     def cmd_vel_callback(self, data):
@@ -31,7 +31,7 @@ class VelocityNode:
     def scan_callback(self, data):
 
         global vel_msg 
-        vel_msg_pub = Twist()
+        vel_msg_pub = vel_msg
 
         #Partition the sensor range into five smaller ranges
         #range_left = data.ranges[0:int(len(data.ranges)/5)]
@@ -51,6 +51,7 @@ class VelocityNode:
 
             else: 
                 vel_msg_pub.linear.x = 0.0
+                vel_msg_pub.linear.z = 0.0
              
         elif(self.average(range_diagonal_left) < attention_distance and self.average(range_diagonal_left) > 0):
             if(self.average(range_diagonal_left)/3-stop_distance > 0):
@@ -59,6 +60,7 @@ class VelocityNode:
 
             else: 
                 vel_msg_pub.linear.x = 0.0
+                vel_msg_pub.linear.z = 0.0
            
         elif(self.average(range_diagonal_right) < attention_distance and self.average(range_diagonal_right) > 0):
 
@@ -67,6 +69,7 @@ class VelocityNode:
                 
             else: 
                 vel_msg_pub.linear.x = 0.0
+                vel_msg_pub.linear.z = 0.0
           
         #If no attention_distance is invaded, drive es input says
         else: 

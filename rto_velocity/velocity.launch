@@ -1,10 +1,13 @@
 <launch>
 
-    <node pkg="rto_velocity" type="velocity_node.py" name="velocity_node" ns="velocity" output="screen">
+    <node pkg="pcimr_tutorial_02" type="velocity_node.py" name="velocity_node" ns="velocity" output="screen">
  
         <param name="stop_distance" value="0.33" />
         <param name="attention_distance" value="3" />
 
     </node>
+
+    <include file="rto_core/rto_teleop/launch/keyboard_teleop.launch"/>
+    <include file="rto_simulation/rto_bringup_sim/launch/robot.launch"/> 
 
 </launch>
