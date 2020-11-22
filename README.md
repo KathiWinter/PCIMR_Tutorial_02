@@ -1,7 +1,7 @@
 # PCIMR_Tutorial_02
 
 Run the task with the following command: </br>
-`roslaunch velocity.launch`</br> 
+`roslaunch rto_velocity velocity.launch`</br> 
 
 
 Functioning of velocity_node:  
