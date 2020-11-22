@@ -1,8 +1,6 @@
 # PCIMR_Tutorial_02
 
-Run the task with the following commands: </br>
-`roslaunch rto_bringup_simulation robot.launch` </br>
-`rosrun teleop_twist_keyboard teleop_twist_keyboard.py` </br>
+Run the task with the following command: </br>
 `roslaunch velocity.launch`</br> 
 
 
