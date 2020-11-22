@@ -7,7 +7,7 @@
 
     </node>
 
-    <include file="rto_core/rto_teleop/launch/keyboard_teleop.launch"/>
+    <include file="rto_core/rto_teleop/launch/keyboard_teleop.launch"> <remap from="/cmd_vel" to="/input/cmd_vel"/> </include>
     <include file="rto_simulation/rto_bringup_sim/launch/robot.launch"/> 
 
 </launch>

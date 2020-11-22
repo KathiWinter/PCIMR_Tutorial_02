@@ -11,9 +11,9 @@ class VelocityNode:
 
     def __init__(self):
 
-        self.sub_cmd_vel = rospy.Subscriber("/cmd_vel", Twist, self.cmd_vel_callback)
+        self.sub_cmd_vel = rospy.Subscriber("/input/cmd_vel", Twist, self.cmd_vel_callback)
         self.sub_scan = rospy.Subscriber("/scan", LaserScan, self.scan_callback)
-        self.pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
+        self.pub = rospy.Publisher('/pioneer/cmd_vel', Twist, queue_size=10)
     
         
     def cmd_vel_callback(self, data):
@@ -48,37 +48,41 @@ class VelocityNode:
             if(self.average(range_forward)/3-stop_distance > 0):
                 #If the input is slower than the required speed, listen to the input
                 vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_forward)/3)
+                vel_msg_pub.linear.y  = min(vel_msg.linear.x, self.average(range_forward)/3)
 
             else: 
                 vel_msg_pub.linear.x = 0.0
-                vel_msg_pub.linear.z = 0.0
+                vel_msg_pub.linear.y = 0.0
+                vel_msg_pub.angular.z = 0.0
              
         elif(self.average(range_diagonal_left) < attention_distance and self.average(range_diagonal_left) > 0):
             if(self.average(range_diagonal_left)/3-stop_distance > 0):
                 vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_diagonal_left)/3)
+                vel_msg_pub.linear.y  = min(vel_msg.linear.x, self.average(range_diagonal_left)/3)
                
 
             else: 
                 vel_msg_pub.linear.x = 0.0
-                vel_msg_pub.linear.z = 0.0
+                vel_msg_pub.linear.y = 0.0
+                vel_msg_pub.angular.z = 0.0
            
         elif(self.average(range_diagonal_right) < attention_distance and self.average(range_diagonal_right) > 0):
 
             if(self.average(range_diagonal_right)/3-stop_distance > 0):
                 vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_diagonal_right)/3)
+                vel_msg_pub.linear.y  = min(vel_msg.linear.x, self.average(range_diagonal_left)/3)
                 
             else: 
                 vel_msg_pub.linear.x = 0.0
-                vel_msg_pub.linear.z = 0.0
-          
+                vel_msg_pub.linear.y = 0.0
+                vel_msg_pub.angular.z = 0.0
+                
         #If no attention_distance is invaded, drive es input says
         else: 
             vel_msg_pub.linear.x = vel_msg.linear.x  
             vel_msg_pub.linear.y = vel_msg.linear.y
             vel_msg_pub.linear.z = vel_msg.linear.z
-        vel_msg_pub.angular.x = vel_msg.angular.x
-        vel_msg_pub.angular.y = vel_msg.angular.y
-        vel_msg_pub.angular.z = vel_msg.angular.z
+        
         self.pub.publish(vel_msg_pub)
 
     def average(self,tuple):
@@ -97,7 +101,8 @@ if __name__ == '__main__':
     velocity_node = VelocityNode()
 
     vel_msg = Twist()
-    stop_distance = rospy.get_param('~stop_distance')
-    attention_distance = rospy.get_param('~attention_distance')
-
+    #stop_distance = rospy.get_param('~stop_distance')
+    #attention_distance = rospy.get_param('~attention_distance')
+    stop_distance = 0.33
+    attention_distance = 3
     velocity_node.run(rate=1)
