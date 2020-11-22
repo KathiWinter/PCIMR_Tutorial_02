@@ -76,7 +76,7 @@ class VelocityNode:
                 vel_msg_pub.linear.x = 0.0
                 vel_msg_pub.linear.y = 0.0
                 vel_msg_pub.angular.z = 0.0
-                
+
         #If no attention_distance is invaded, drive es input says
         else: 
             vel_msg_pub.linear.x = vel_msg.linear.x  

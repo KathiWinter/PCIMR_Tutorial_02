@@ -7,7 +7,10 @@
 
     </node>
 
-    <include file="rto_core/rto_teleop/launch/keyboard_teleop.launch"> <remap from="/cmd_vel" to="/input/cmd_vel"/> </include>
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop" output="screen">
+        <remap from="cmd_vel" to="input/cmd_vel"/>
+    </node>
+
     <include file="rto_simulation/rto_bringup_sim/launch/robot.launch"/> 
 
 </launch>
