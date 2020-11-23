@@ -45,10 +45,10 @@ class VelocityNode:
             vel_msg_pub.linear.x = vel_msg.linear.x
         #If closer to an object than distance 3, but further away than 0.33, proportionally reduce speed
         elif(self.average(range_forward) < attention_distance and self.average(range_forward) > 0):
-            if(self.average(range_forward)/3-stop_distance > 0):
+            if(self.average(range_forward)/attention_distance-stop_distance > 0):
                 #If the input is slower than the required speed, listen to the input
-                vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_forward)/3)
-                vel_msg_pub.linear.y  = min(vel_msg.linear.x, self.average(range_forward)/3)
+                vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_forward)/attention_distance)
+                vel_msg_pub.linear.y  = min(vel_msg.linear.x, self.average(range_forward)/attention_distance)
 
             else: 
                 vel_msg_pub.linear.x = 0.0
@@ -56,9 +56,9 @@ class VelocityNode:
                 vel_msg_pub.angular.z = 0.0
              
         elif(self.average(range_diagonal_left) < attention_distance and self.average(range_diagonal_left) > 0):
-            if(self.average(range_diagonal_left)/3-stop_distance > 0):
-                vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_diagonal_left)/3)
-                vel_msg_pub.linear.y  = min(vel_msg.linear.x, self.average(range_diagonal_left)/3)
+            if(self.average(range_diagonal_left)/attention_distance-stop_distance > 0):
+                vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_diagonal_left)/attention_distance)
+                vel_msg_pub.linear.y  = min(vel_msg.linear.x, self.average(range_diagonal_left)/attention_distance)
                
 
             else: 
@@ -68,9 +68,9 @@ class VelocityNode:
            
         elif(self.average(range_diagonal_right) < attention_distance and self.average(range_diagonal_right) > 0):
 
-            if(self.average(range_diagonal_right)/3-stop_distance > 0):
-                vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_diagonal_right)/3)
-                vel_msg_pub.linear.y  = min(vel_msg.linear.x, self.average(range_diagonal_left)/3)
+            if(self.average(range_diagonal_right)/attention_distance-stop_distance > 0):
+                vel_msg_pub.linear.x  = min(vel_msg.linear.x, self.average(range_diagonal_right)/attention_distance)
+                vel_msg_pub.linear.y  = min(vel_msg.linear.x, self.average(range_diagonal_left)/attention_distance)
                 
             else: 
                 vel_msg_pub.linear.x = 0.0
