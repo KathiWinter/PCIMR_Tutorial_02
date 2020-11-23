@@ -76,12 +76,13 @@ class VelocityNode:
                 vel_msg_pub.linear.x = 0.0
                 vel_msg_pub.linear.y = 0.0
                 vel_msg_pub.angular.z = 0.0
+              
 
         #If no attention_distance is invaded, drive es input says
         else: 
             vel_msg_pub.linear.x = vel_msg.linear.x  
             vel_msg_pub.linear.y = vel_msg.linear.y
-            vel_msg_pub.linear.z = vel_msg.linear.z
+            vel_msg_pub.angular.z = vel_msg.angular.z
         
         self.pub.publish(vel_msg_pub)
 
