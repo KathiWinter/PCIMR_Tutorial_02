@@ -101,8 +101,7 @@ if __name__ == '__main__':
     velocity_node = VelocityNode()
 
     vel_msg = Twist()
-    #stop_distance = rospy.get_param('~stop_distance')
-    #attention_distance = rospy.get_param('~attention_distance')
-    stop_distance = 0.33
-    attention_distance = 3
+    stop_distance = rospy.get_param('~stop_distance')
+    attention_distance = rospy.get_param('~attention_distance')
+
     velocity_node.run(rate=1)
