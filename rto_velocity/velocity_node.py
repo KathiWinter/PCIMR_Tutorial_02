@@ -43,6 +43,8 @@ class VelocityNode:
         #Let the robot go backwards, when we want so
         if(vel_msg.linear.x < 0):
             vel_msg_pub.linear.x = vel_msg.linear.x
+            vel_msg_pub.linear.y = vel_msg.linear.y
+            vel_msg_pub.angular.z = vel_msg.angular.z
         #If closer to an object than distance 3, but further away than 0.33, proportionally reduce speed
         elif(self.average(range_forward) < attention_distance and self.average(range_forward) > 0):
             if(self.average(range_forward)/attention_distance-stop_distance > 0):
